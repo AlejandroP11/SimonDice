@@ -8,14 +8,14 @@ import android.widget.Button
 import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
-    val colores = arrayOf("Verde", "Rojo", "Amarillo", "Azul")
+    val colores = arrayOf("Verde", "Verde", "Verde", "Verde")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val bInicio : Button = findViewById(R.id.inicioB)
         bInicio.setOnClickListener{
-            empezar(bInicio)
+            empezar()
         }
     }
 
@@ -27,13 +27,11 @@ class MainActivity : AppCompatActivity() {
             3 -> colores[2]
             else -> colores[3]
         }
-
         return colRan
     }
 
-    fun empezar(view : View){
-        val col = elec()
-        val emp = Intent(this, col::class.java)
-        startActivity(emp)
+    fun empezar(){
+        elec()
     }
+
 }
