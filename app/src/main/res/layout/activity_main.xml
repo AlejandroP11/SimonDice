@@ -92,32 +92,32 @@
         android:id="@+id/fallo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="180dp"
-        android:text="@string/fallo"
+        android:layout_marginTop="184dp"
+        android:text="@string/pause"
         android:textAlignment="center"
         android:textColor="@color/red"
         android:textSize="40sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="gone"
-        />
+    />
 
-    <Button
-        android:id="@+id/salir"
-        android:layout_width="300dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="524dp"
-        android:backgroundTint="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone"
-        android:text="@string/salir"
-        android:textColor="@color/white"
-        />
+<Button
+    android:id="@+id/salir"
+    android:layout_width="300dp"
+    android:layout_height="100dp"
+    android:layout_marginTop="524dp"
+    android:backgroundTint="@color/black"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.495"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    android:visibility="gone"
+    android:text="@string/salir"
+    android:textColor="@color/white"
+    />
+
 
     <Button
         android:id="@+id/restart"
@@ -133,4 +133,19 @@
         android:text="@string/restart"
         android:textColor="@color/white"
         />
+
+    <Button
+        android:id="@+id/pause"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="292dp"
+        android:backgroundTint="@color/coral"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
+        android:text="@string/unpause"
+        android:textColor="@color/white"
+    />
 </androidx.constraintlayout.widget.ConstraintLayout>

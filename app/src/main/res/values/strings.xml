@@ -7,6 +7,8 @@
     <string name="SBlue">Simon dice AZUL</string>
     <string name="puntI">0</string>
     <string name="fallo">RESPUESTA INCORRECTA</string>
+    <string name="pause">PAUSA</string>
     <string name="restart">RESTART</string>
+    <string name="unpause">CONTINUAR</string>
     <string name="salir">SALIR</string>
 </resources>

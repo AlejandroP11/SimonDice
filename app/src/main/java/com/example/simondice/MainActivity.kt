@@ -14,6 +14,8 @@ class MainActivity : AppCompatActivity() {
     var secuencia = arrayOf("")
     var contadorS = 0
     var puntuacion = 0
+    var empezar = false
+    var pausado = false
     var fallo = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val bInicio : Button = findViewById(R.id.inicioB)
         bInicio.setOnClickListener{
+            empezar = true
             color = empezar(bInicio)
             secuencia += color
         }
@@ -45,12 +48,28 @@ class MainActivity : AppCompatActivity() {
             comprueba(bAmarillo, secuencia)
         }
         val bRestart : Button = findViewById(R.id.restart)
-        bRestart.setOnClickListener{
-            recreate()
+        bRestart.setOnClickListener {
+                recreate()
         }
         val bSalir : Button = findViewById(R.id.salir)
         bSalir.setOnClickListener{
             exitProcess(0)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if(empezar){
+            mPausar()
+            pausado = true
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val bPausa : Button = findViewById(R.id.pause)
+        bPausa.setOnClickListener{
+            unpause()
         }
     }
 
@@ -121,15 +140,13 @@ class MainActivity : AppCompatActivity() {
             secuencia += color
             dice(color)
         }
-
-        if(fallo){
+        if(fallo)
             fallar()
-        }
     }
 
-    //función que se encarga de gestionar lo que pasa cuando el usuario falla
+    //función que se encarga de gestionar lo que pasa cuando el usuario falla o se sale del juego
     fun fallar(){
-        val bVerde : Button = findViewById<Button?>(R.id.Bverde)
+        val bVerde : Button = findViewById(R.id.Bverde)
         bVerde.visibility = View.GONE
         val bRojo : Button = findViewById(R.id.Brojo)
         bRojo.visibility = View.GONE
@@ -144,7 +161,52 @@ class MainActivity : AppCompatActivity() {
         val bSalir : Button = findViewById(R.id.salir)
         bSalir.visibility = View.VISIBLE
         val fallado : TextView = findViewById(R.id.fallo)
+        fallado.setText(R.string.fallo)
         fallado.visibility = View.VISIBLE
+    }
 
+    //función que genera un menú de pausa
+    fun mPausar(){
+        val bVerde : Button = findViewById(R.id.Bverde)
+        bVerde.visibility = View.GONE
+        val bRojo : Button = findViewById(R.id.Brojo)
+        bRojo.visibility = View.GONE
+        val bAzul : Button = findViewById(R.id.Bazul)
+        bAzul.visibility = View.GONE
+        val bAmarillo : Button = findViewById(R.id.Bamarillo)
+        bAmarillo.visibility = View.GONE
+        val manda: TextView = findViewById(R.id.manda)
+        manda.visibility = View.GONE
+        val bPause : Button = findViewById(R.id.pause)
+        bPause.visibility = View.VISIBLE
+        val bRestart : Button = findViewById(R.id.restart)
+        bRestart.visibility = View.VISIBLE
+        val bSalir : Button = findViewById(R.id.salir)
+        bSalir.visibility = View.VISIBLE
+        val pause : TextView = findViewById(R.id.fallo)
+        pause.setText(R.string.pause)
+        pause.visibility = View.VISIBLE
+    }
+
+    //función que "despausa" el juego
+    fun unpause(){
+        val bVerde : Button = findViewById(R.id.Bverde)
+        bVerde.visibility = View.VISIBLE
+        val bRojo : Button = findViewById(R.id.Brojo)
+        bRojo.visibility = View.VISIBLE
+        val bAzul : Button = findViewById(R.id.Bazul)
+        bAzul.visibility = View.VISIBLE
+        val bAmarillo : Button = findViewById(R.id.Bamarillo)
+        bAmarillo.visibility = View.VISIBLE
+        val manda: TextView = findViewById(R.id.manda)
+        manda.visibility = View.VISIBLE
+        val bPause : Button = findViewById(R.id.pause)
+        bPause.visibility = View.GONE
+        val bRestart : Button = findViewById(R.id.restart)
+        bRestart.visibility = View.GONE
+        val bSalir : Button = findViewById(R.id.salir)
+        bSalir.visibility = View.GONE
+        val fallado : TextView = findViewById(R.id.fallo)
+        fallado.visibility = View.GONE
     }
 }
