@@ -26,6 +26,6 @@ Simón Dice es un juego, que proveé ordenes aleatorias y comprueba que estas se
 <img alt="Imagen de Inicio del Juego" height="500" src="MitadJuego.jpg" title="Menú de inicio" width="250"/>  
 
 
-<img alt="Imagen de Inicio del Juego" height="500" src="MenuFinal.jpg" title="Menú de inicio" width="250"/>  
+<img alt="Imagen de Inicio del Juego" height="500" src="MenuFinal.jpg" title="Menú de inicio" width="250"/>   
 
 
