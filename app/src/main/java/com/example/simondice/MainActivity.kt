@@ -5,64 +5,83 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 import kotlin.system.exitProcess
 
+var colorFondo = ""
+
 class MainActivity : AppCompatActivity() {
+
     val colores = arrayOf("Verde", "Rojo", "Azul", "Amarillo")
     var color = ""
     var secuencia = arrayOf("")
     var contadorS = 0
     var puntuacion = 0
     var empezar = false
-    var pausado = false
     var fallo = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val layout : View = findViewById(R.id.layout)
+        val layoutroot : View = layout.rootView
+
+        if(!colorFondo.isEmpty())
+            colorF(colorFondo, layoutroot)
+
+        val bVerde : Button = findViewById(R.id.Bverde)
+        bVerde.setOnClickListener {
+            layoutroot.setBackgroundColor(ContextCompat.getColor(this, R.color.greenB))
+            colorFondo = "verde"
+        }
+        val bRojo : Button = findViewById(R.id.Brojo)
+        bRojo.setOnClickListener {
+            layoutroot.setBackgroundColor(ContextCompat.getColor(this, R.color.redB))
+            colorFondo = "rojo"
+        }
+        val bAzul : Button = findViewById(R.id.Bazul)
+        bAzul.setOnClickListener {
+            layoutroot.setBackgroundColor(ContextCompat.getColor(this, R.color.blueB))
+            colorFondo = "azul"
+        }
+        val bAmarillo : Button = findViewById(R.id.Bamarillo)
+        bAmarillo.setOnClickListener {
+            layoutroot.setBackgroundColor(ContextCompat.getColor(this, R.color.yellowB))
+            colorFondo = "amarillo"
+        }
+
         val bInicio : Button = findViewById(R.id.inicioB)
         bInicio.setOnClickListener{
             empezar = true
             color = empezar(bInicio)
             secuencia += color
+            jugar()
         }
-    }
 
-    override fun onStart() {
-        super.onStart()
-        val bVerde : Button = findViewById(R.id.Bverde)
-        bVerde.setOnClickListener{
-            comprueba(bVerde, secuencia)
-        }
-        val bRojo : Button = findViewById(R.id.Brojo)
-        bRojo.setOnClickListener{
-            comprueba(bRojo, secuencia)
-        }
-        val bAzul : Button = findViewById(R.id.Bazul)
-        bAzul.setOnClickListener{
-            comprueba(bAzul, secuencia)
-        }
-        val bAmarillo : Button = findViewById(R.id.Bamarillo)
-        bAmarillo.setOnClickListener{
-            comprueba(bAmarillo, secuencia)
-        }
         val bRestart : Button = findViewById(R.id.restart)
         bRestart.setOnClickListener {
-                recreate()
+            val mIntent = intent
+            intent.putExtra("colorFondo", String())
+            finish()
+            startActivity(mIntent)
         }
         val bSalir : Button = findViewById(R.id.salir)
         bSalir.setOnClickListener{
             exitProcess(0)
         }
+
     }
 
     override fun onPause() {
         super.onPause()
-        if(empezar){
+        if(empezar)
             mPausar()
-            pausado = true
-        }
     }
 
     override fun onResume() {
@@ -144,6 +163,28 @@ class MainActivity : AppCompatActivity() {
             fallar()
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
+    fun jugar(){
+        GlobalScope.launch(Dispatchers.Main){
+            val bVerde : Button = findViewById(R.id.Bverde)
+            bVerde.setOnClickListener{
+                comprueba(bVerde, secuencia)
+            }
+            val bRojo : Button = findViewById(R.id.Brojo)
+            bRojo.setOnClickListener{
+                comprueba(bRojo, secuencia)
+            }
+            val bAzul : Button = findViewById(R.id.Bazul)
+            bAzul.setOnClickListener{
+                comprueba(bAzul, secuencia)
+            }
+            val bAmarillo : Button = findViewById(R.id.Bamarillo)
+            bAmarillo.setOnClickListener{
+                comprueba(bAmarillo, secuencia)
+            }
+        }
+    }
+
     //función que se encarga de gestionar lo que pasa cuando el usuario falla o se sale del juego
     fun fallar(){
         val bVerde : Button = findViewById(R.id.Bverde)
@@ -208,5 +249,16 @@ class MainActivity : AppCompatActivity() {
         bSalir.visibility = View.GONE
         val fallado : TextView = findViewById(R.id.fallo)
         fallado.visibility = View.GONE
+    }
+
+    fun colorF(color : String, lr : View){
+        if(color == "verde")
+            lr.setBackgroundColor(ContextCompat.getColor(this, R.color.greenB))
+        else if(color == "rojo")
+            lr.setBackgroundColor(ContextCompat.getColor(this, R.color.redB))
+        else if(color == "azul")
+            lr.setBackgroundColor(ContextCompat.getColor(this, R.color.blueB))
+        else
+            lr.setBackgroundColor(ContextCompat.getColor(this, R.color.yellowB))
     }
 }
