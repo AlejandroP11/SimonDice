@@ -7,7 +7,7 @@ Simón Dice es un juego, que proveé ordenes aleatorias y comprueba que estas se
 
 |||||
 |---|---|---|---|
-|<img alt="Imagen de Inicio del Juego" height="500" src="Verde.jpg" title="Menú de inicio" width="250"/>|<img alt="Imagen de Inicio del Juego" height="500" src="Rojo.jpg" title="Menú de inicio" width="250"/>|<img alt="Imagen de Inicio del Juego" height="500" src="Amarillo.jpg" title="Menú de inicio" width="250"/>|<img alt="Imagen de Inicio del Juego" height="500" src="Azul.jpg" title="Menú de inicio" width="250"/>|    
+| <img alt= <img alt="Imagen de Inicio del Juego" height="" src="Azul.jpg" title="Menú de inicio" width="150"/> <img alt="Imagen de Inicio del Juego" height="300" src="Azul.jpg" title="Menú de inicio" width="150"/> img alt= <img alt="Imagen de Inicio del Juego" height="" src="Azul.jpg" title="Menú de inicio" width="150"/> <img alt="Imagen de Inicio del Juego" height="300" src="Azul.jpg" title="Menú de inicio" width="150"/> |    
 
 
 <img alt="Imagen de Inicio del Juego" height="500" src="Instruccion.jpg" title="Menú de inicio" width="250"/>  
