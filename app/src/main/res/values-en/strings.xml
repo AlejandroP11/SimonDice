@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Simon Says</string>
+    <string name="SGreen">Simon says VERDE</string>
+    <string name="SRed">Simon says ROJO</string>
+    <string name="SYellow">Simon says AMARILLO</string>
+    <string name="SBlue">Simon says AZUL</string>
+    <string name="fallo">WRONG ANSWER</string>
+    <string name="pause">PAUSE</string>
+    <string name="unpause">CONTINUE</string>
+    <string name="salir">EXIT</string>
+</resources>
