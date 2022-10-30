@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import kotlin.random.Random
 import kotlin.system.exitProcess
 
-var colorFondo = ""
+var colorFondo = "" //variable que, una vez seleccionado, guardará el color de fondo
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,12 +29,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //hayamos el layout por su id para cambiar el color con los botones
         val layout : View = findViewById(R.id.layout)
         val layoutroot : View = layout.rootView
 
+        //si la variable colorFondo no esta vacía llamamos a la función colorF
         if(!colorFondo.isEmpty())
             colorF(colorFondo, layoutroot)
 
+        //Listeners para saber que botón es presionado y cambiar el color de fondo al del botón que se presionó
         val bVerde : Button = findViewById(R.id.Bverde)
         bVerde.setOnClickListener {
             layoutroot.setBackgroundColor(ContextCompat.getColor(this, R.color.greenB))
@@ -56,21 +59,25 @@ class MainActivity : AppCompatActivity() {
             colorFondo = "amarillo"
         }
 
+        //boton inicio que al ser pulsado comienza el juego
         val bInicio : Button = findViewById(R.id.inicioB)
         bInicio.setOnClickListener{
             empezar = true
             color = empezar(bInicio)
             secuencia += color
-            jugar()
+            jugar() //corrutina
         }
 
+        //botón restart que solo se visualiza si se pone pausa o se pierde en el juego
         val bRestart : Button = findViewById(R.id.restart)
         bRestart.setOnClickListener {
-            val mIntent = intent
-            intent.putExtra("colorFondo", String())
-            finish()
-            startActivity(mIntent)
+            val mIntent = intent //creación de un intento
+            intent.putExtra("colorFondo", String()) //guardamos la variable colorFondo en el intento
+            finish() //finaliza la actividad
+            startActivity(mIntent) //vuelve a comenzar la actividad
         }
+
+        //botón salie que solo se visualiza si se pone pausa o se pierde en el juego
         val bSalir : Button = findViewById(R.id.salir)
         bSalir.setOnClickListener{
             exitProcess(0)
@@ -80,12 +87,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
+        //si la variable empezar es true se llama a la función mPausar
         if(empezar)
             mPausar()
     }
 
     override fun onResume() {
         super.onResume()
+
+        //botón que al ser clickeado llama a la función unpause
         val bPausa : Button = findViewById(R.id.pause)
         bPausa.setOnClickListener{
             unpause()
@@ -149,6 +159,7 @@ class MainActivity : AppCompatActivity() {
                 fallo = true
         }
 
+        //cambiar el valor de la puntuación si se comprueba que la secuencia fue colocada correctamente
         val punt : TextView = findViewById(R.id.puntuacion)
         if(contadorS == secuencia.size - 1) {
             contadorS = 0
@@ -163,6 +174,7 @@ class MainActivity : AppCompatActivity() {
             fallar()
     }
 
+    //función que contiene una corrutina para cambiar la función de los botones para jugar
     @OptIn(DelicateCoroutinesApi::class)
     fun jugar(){
         GlobalScope.launch(Dispatchers.Main){
@@ -251,6 +263,7 @@ class MainActivity : AppCompatActivity() {
         fallado.visibility = View.GONE
     }
 
+    //función que compara la variable colorFondo para cambia el color del layout
     fun colorF(color : String, lr : View){
         if(color == "verde")
             lr.setBackgroundColor(ContextCompat.getColor(this, R.color.greenB))
