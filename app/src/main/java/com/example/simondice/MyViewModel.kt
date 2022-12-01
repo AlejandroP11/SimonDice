@@ -1,31 +1,34 @@
 package com.example.simondice
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kotlin.random.Random
 
-/*
- * MyViewModel, inicializará y modificará los datos de nuestra aplicación
- */
-class MyViewModel(): ViewModel() {
-    //lista que guarda la secuencia del juego
-    //es mutable debido a que va a cambiar continuamente
-    val secuencia = mutableListOf<String>()
-    //se define una MutableLiveData para observar los valores de la secuencia
-    val livedata_secuencia = MutableLiveData<MutableList<String>>()
+class MyViewModel: ViewModel() {
+    // este va a ser nuestra lista para la secuencia random
+    // usamos mutable, ya que la queremos modificar
+    val contadorRonda = mutableListOf<Int>()
+    // definimos una MutableLiveData
+    // para poder observar los valores de la MutableList<Int>
+    val livedata_contadorRonda = MutableLiveData<MutableList<Int>>()
 
-    //se inicializan las variables cuando se instancia la clase
+    // inicializamos variables cuando instanciamos
     init {
-        livedata_secuencia.value = secuencia
+        livedata_contadorRonda.value = contadorRonda
     }
 
-    fun elec(): String{
-        secuencia.add(when(Random.nextInt(4) + 1){
-            1 -> "Verde"
-            2 -> "Rojo"
-            3 -> "Azul"
-            else -> "Amarillo"
-        })
-        return secuencia[secuencia.lastIndex]
+    /**
+     * añadimos entero random al
+     */
+    fun sumarRonda(): Int {
+        if (contadorRonda.isEmpty())
+            contadorRonda.add(0)
+        var ultimoValor=contadorRonda[contadorRonda.lastIndex]
+        ultimoValor++
+        contadorRonda.add(ultimoValor)
+        Log.d("estado", "aparece marcador de ronda")
+
+        Log.d("estado", "ronda:" + contadorRonda)
+        return contadorRonda[contadorRonda.lastIndex]
     }
 }

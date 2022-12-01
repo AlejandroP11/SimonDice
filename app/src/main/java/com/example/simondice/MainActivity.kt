@@ -12,18 +12,18 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 import kotlin.system.exitProcess
 
 var colorFondo = "" //variable que, una vez seleccionado, guardará el color de fondo
 
 class MainActivity : AppCompatActivity() {
-    //val colores = arrayOf("Verde", "Rojo", "Azul", "Amarillo")
+
+    val colores = arrayOf("Verde", "Rojo", "Azul", "Amarillo")
     var color = ""
-    //var secuencia = arrayOf("")
+    var secuencia = arrayOf("")
     var contadorS = 0
-    //variable a la que le indicaremos el tamaño de la secuencia de nuestro viewmodel
-    var contadorJ = 0
-    var puntuacion = 0
+    var puntuacion = listOf<Int>()
     var empezar = false
     var fallo = false
     lateinit var layout : View
@@ -38,12 +38,19 @@ class MainActivity : AppCompatActivity() {
     lateinit var bSalir : Button
     lateinit var manda: TextView
     lateinit var fallado : TextView
-    //variable que recibe el color que se le agrege a la secuencia
-    lateinit var ultColor : String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         val miModelo by viewModels<MyViewModel>()
+        miModelo.livedata_contadorRonda.observe(
+            this,
+            Observer {
+                puntuacion = miModelo.contadorRonda
+            }
+        )
+
         //hayamos el layout por su id para cambiar el color con los botones
         layout = findViewById(R.id.layout)
         layoutroot = layout.rootView
@@ -85,11 +92,8 @@ class MainActivity : AppCompatActivity() {
         bInicio = findViewById(R.id.inicioB)
         bInicio.setOnClickListener{
             empezar = true
-            ultColor = miModelo.elec()
-            dice(ultColor)
-            empezar(bInicio)
-            //color = empezar(bInicio)
-            //secuencia += color
+            color = empezar(bInicio)
+            secuencia += color
             jugar() //corrutina
         }
 
@@ -107,7 +111,6 @@ class MainActivity : AppCompatActivity() {
         bSalir.setOnClickListener{
             exitProcess(0)
         }
-
     }
 
     override fun onPause() {
@@ -126,9 +129,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-    //función que elige de manera aleatoria un color del Array colores, ahora se encuentra en el viewModel
-    /*fun elec(): String {
+    //función que elige de manera aleatoria un color del Array colores
+    fun elec(): String {
 
         val colRan = when(Random.nextInt(4) + 1){
             1 -> colores[0]
@@ -137,7 +139,7 @@ class MainActivity : AppCompatActivity() {
             else -> colores[3]
         }
         return colRan
-    }*/
+    }
 
     //función que enseña en pantalla el color que se debe presionar
     fun dice(colRan: String){
@@ -152,15 +154,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     //función que empieza el juego sacando por pantalla el primer color y esconde el boton de inicio
-    fun empezar(boton: Button) {
-        //val colorI = elec()
+    fun empezar(boton: Button): String {
+        val colorI = elec()
         boton.visibility = View.GONE
-        //dice(colorI)
-        //return colorI
+        dice(colorI)
+        return colorI
     }
 
     //función que comprueba que los colores sean presionados en el orden indicado
-    fun comprueba(view: View, comprobado: MutableList<String>){
+    fun comprueba(view: View, comprobado: Array<String>){
+        contadorS ++
         if(comprobado[contadorS] == "Verde"){
             val bPrueba : Button = findViewById(R.id.Bverde)
             if (bPrueba.id != view.id)
@@ -181,32 +184,19 @@ class MainActivity : AppCompatActivity() {
             if (bPrueba.id != view.id)
                 fallo = true
         }
+
         //cambiar el valor de la puntuación si se comprueba que la secuencia fue colocada correctamente
         val punt : TextView = findViewById(R.id.puntuacion)
-        if(contadorS == contadorJ) {
+        if(contadorS == secuencia.size - 1) {
             contadorS = 0
-            puntuacion++
-            val sPun = puntuacion.toString()
-            punt.text = sPun
-            //color = elec()
-            //secuencia += color
-            //inicializamos nuestro viewmodel
+            //puntuacion++
             val miModelo by viewModels<MyViewModel>()
-            miModelo.livedata_secuencia.observe(
-                this,
-                //observador para que cada vez que cambie la secuencia cambie el valor de nuestro contadorJ
-                Observer(
-                    fun(nuevaSecuencia: MutableList<String>){
-                        contadorJ = nuevaSecuencia.size
-                    }
-                )
-            )
-            //devuelve el nuevo color que se agrega a la secuencia para enseñarlo por pantalla
-            ultColor = miModelo.elec()
-            dice(ultColor)
-        }
-        else {
-            contadorS++
+            miModelo.sumarRonda()
+            val sPun = puntuacion[puntuacion.size - 1].toString()
+            punt.text = sPun
+            color = elec()
+            secuencia += color
+            dice(color)
         }
         if(fallo)
             fallar()
@@ -216,19 +206,17 @@ class MainActivity : AppCompatActivity() {
     @OptIn(DelicateCoroutinesApi::class)
     fun jugar(){
         GlobalScope.launch(Dispatchers.Main){
-            val miModelo by viewModels<MyViewModel>()
-
             bVerde.setOnClickListener{
-                comprueba(bVerde, miModelo.secuencia)
+                comprueba(bVerde, secuencia)
             }
             bRojo.setOnClickListener{
-                comprueba(bRojo, miModelo.secuencia)
+                comprueba(bRojo, secuencia)
             }
             bAzul.setOnClickListener{
-                comprueba(bAzul, miModelo.secuencia)
+                comprueba(bAzul, secuencia)
             }
             bAmarillo.setOnClickListener{
-                comprueba(bAmarillo, miModelo.secuencia)
+                comprueba(bAmarillo, secuencia)
             }
         }
     }
