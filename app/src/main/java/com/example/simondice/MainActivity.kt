@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -21,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     var color = ""
     var secuencia = arrayOf("")
     var contadorS = 0
-    var puntuacion = 0
+    var puntuacion = listOf<Int>()
     var empezar = false
     var fallo = false
     lateinit var layout : View
@@ -40,6 +42,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val miModelo by viewModels<MyViewModel>()
+        miModelo.livedata_contadorRonda.observe(
+            this,
+            Observer {
+                puntuacion = miModelo.contadorRonda
+            }
+        )
 
         //hayamos el layout por su id para cambiar el color con los botones
         layout = findViewById(R.id.layout)
@@ -179,8 +189,10 @@ class MainActivity : AppCompatActivity() {
         val punt : TextView = findViewById(R.id.puntuacion)
         if(contadorS == secuencia.size - 1) {
             contadorS = 0
-            puntuacion++
-            val sPun = puntuacion.toString()
+            //puntuacion++
+            val miModelo by viewModels<MyViewModel>()
+            miModelo.sumarRonda()
+            val sPun = puntuacion[puntuacion.size - 1].toString()
             punt.text = sPun
             color = elec()
             secuencia += color
