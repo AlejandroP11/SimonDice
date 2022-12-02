@@ -1,10 +1,12 @@
 package com.example.simondice
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class MyViewModel: ViewModel() {
+class MyViewModel(application: Application): AndroidViewModel(application) {
     // este va a ser nuestra lista para la secuencia random
     // usamos mutable, ya que la queremos modificar
     val contadorRonda = mutableListOf<Int>()
