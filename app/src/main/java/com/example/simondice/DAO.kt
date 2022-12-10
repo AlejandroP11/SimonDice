@@ -1,22 +1,17 @@
 package com.example.simondice
 
 import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 
-class DAO {
-    @Dao
-    interface UserDao {
-        @Query("SELECT * FROM Datos")
-        fun getAll(): List<Datos>
+@Dao
+interface UserDao {
+    @Query("SELECT puntos FROM Datos WHERE id = '1'")
+    suspend fun getMaxPunt(): Int
 
-        @Query("SELECT * FROM Datos WHERE puntos = SELECT MAX(puntos) FROM Datos")
+    @Query("INSERT INTO Datos (puntos) VALUES (0)")
+    suspend fun insertPunt()
 
-        @Insert
-        fun insertAll(Dato: Datos)
-
-        @Delete
-        fun delete(Dato: Datos)
-    }
+    @Update
+    suspend fun update(datos: Datos)
 }

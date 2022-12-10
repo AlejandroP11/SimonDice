@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -23,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     var color = ""
     var secuencia = arrayOf("")
     var contadorS = 0
-    var puntuacion = listOf<Int>()
+    //var puntuacion = listOf<Int>()
     var empezar = false
     var fallo = false
     lateinit var layout : View
@@ -39,17 +40,12 @@ class MainActivity : AppCompatActivity() {
     lateinit var manda: TextView
     lateinit var fallado : TextView
 
+    // instancia del ViewModel
+    private val miModelo by viewModels<MyViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val miModelo by viewModels<MyViewModel>()
-        miModelo.livedata_contadorRonda.observe(
-            this,
-            Observer {
-                puntuacion = miModelo.contadorRonda
-            }
-        )
 
         //hayamos el layout por su id para cambiar el color con los botones
         layout = findViewById(R.id.layout)
@@ -100,6 +96,7 @@ class MainActivity : AppCompatActivity() {
         //botón restart que solo se visualiza si se pone pausa o se pierde en el juego
         bRestart = findViewById(R.id.restart)
         bRestart.setOnClickListener {
+            miModelo.newRonda()
             val mIntent = intent //creación de un intento
             intent.putExtra("colorFondo", String()) //guardamos la variable colorFondo en el intento
             finish() //finaliza la actividad
@@ -190,10 +187,16 @@ class MainActivity : AppCompatActivity() {
         if(contadorS == secuencia.size - 1) {
             contadorS = 0
             //puntuacion++
-            val miModelo by viewModels<MyViewModel>()
             miModelo.sumarRonda()
-            val sPun = puntuacion[puntuacion.size - 1].toString()
-            punt.text = sPun
+            miModelo.ronda.observe(
+                this,
+                androidx.lifecycle.Observer(
+                    fun (_: Int) {
+                        if (miModelo.ronda.value != 0)
+                            punt.text = miModelo.ronda.value.toString()
+                    }
+                )
+            )
             color = elec()
             secuencia += color
             dice(color)
@@ -223,6 +226,10 @@ class MainActivity : AppCompatActivity() {
 
     //función que se encarga de gestionar lo que pasa cuando el usuario falla o se sale del juego
     fun fallar(){
+        if(miModelo.ronda.value!! > miModelo.record.value!!){
+            miModelo.actRecord()
+            Toast.makeText(applicationContext, "¡FELICIDADES! Lograste un nuevo récord", Toast.LENGTH_SHORT).show()
+        }
         bVerde.visibility = View.GONE
         bRojo.visibility = View.GONE
         bAzul.visibility = View.GONE
