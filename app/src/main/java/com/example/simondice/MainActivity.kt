@@ -24,7 +24,6 @@ class MainActivity : AppCompatActivity() {
     var color = ""
     var secuencia = arrayOf("")
     var contadorS = 0
-    //var puntuacion = listOf<Int>()
     var empezar = false
     var fallo = false
     lateinit var layout : View
@@ -191,7 +190,7 @@ class MainActivity : AppCompatActivity() {
             miModelo.ronda.observe(
                 this,
                 androidx.lifecycle.Observer(
-                    fun (_: Int) {
+                    fun (si: Int) {
                         if (miModelo.ronda.value != 0)
                             punt.text = miModelo.ronda.value.toString()
                     }

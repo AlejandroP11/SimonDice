@@ -1,17 +1,17 @@
 package com.example.simondice
 
-import android.annotation.SuppressLint
 import android.app.Application
-import android.util.MutableInt
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.room.Room
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
+import com.google.firebase.ktx.Firebase
 
-@OptIn(DelicateCoroutinesApi::class)
 class MyViewModel(application: Application): AndroidViewModel(application) {
 
     // lista mutable con la que llevaremos la cuenta de las rondas, además de poderla
@@ -21,43 +21,42 @@ class MyViewModel(application: Application): AndroidViewModel(application) {
     // lista en la que obtendremos la puntuación máxima de nuestro juego
     var record = MutableLiveData<Int>()
 
-    // indicamos el contexto de la aplicacion e inicializamos el room
-    @SuppressLint("StaticFieldLeak")
-    private val context = getApplication<Application>().applicationContext
-    private var room : RunDB? = null
+    // para filtrar en el Logcat
+    private val TAG = "RealTime"
+    // referencia a BD
+    private var database: DatabaseReference
+
 
     // inicializamos variables cuando instanciamos
     init {
         ronda.value = 0
-        room = Room
-            .databaseBuilder(context,
-                RunDB::class.java, "Datos")
-            .build()
 
-        val roomCorrutine = GlobalScope.launch(Dispatchers.Main){
-            try{
-                record.value = room!!.userDao().getMaxPunt()
-            } catch (ex : java.lang.NullPointerException) {
-                room!!.userDao().insertPunt()
-                record.value = room!!.userDao().getMaxPunt()
+        //accedemos a la BD de Firebase
+        database = Firebase.database("https://simon-dice-ead36-default-rtdb.firebaseio.com")
+            .getReference("Datos")
+
+        //definimos un Listener
+        val esc = object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                record.value = snapshot.getValue<Int>()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.d(TAG, "esc.OnCancelled", error.toException())
             }
         }
-        roomCorrutine.start()
+
+        //añadimos el listener a la BD de Firebase
+        database.addValueEventListener(esc)
     }
 
     // función que actualiza el record por el valor de la rondas que lleve el jugador
     fun actRecord(){
         record.value = ronda.value
-        val actCorrutine = GlobalScope.launch(Dispatchers.Main){
-            room!!.userDao().update(Datos(1, ronda.value!!))
-        }
-        actCorrutine.start()
+        database.setValue(record.value)
     }
 
-
-    /**
-     * añadimos uno a la ronda
-     */
+    // función que añade uno a la cantidad de rondas
     fun sumarRonda(): Int? {
         ronda.value = ronda.value?.plus(1)
         return ronda.value
